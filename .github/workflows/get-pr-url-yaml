@@ -39,7 +39,6 @@ jobs:
           echo "Associated PR URL: $PR_URL"
           echo "::set-output name=pr_url::$PR_URL"
 
-      # Output the PR URL
       - name: Output PR URL
         run: |
           echo "The associated PR URL is: ${{ steps.find-pr.outputs.pr_url }}"
