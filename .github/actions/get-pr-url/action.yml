@@ -27,8 +27,8 @@ runs:
         echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
         echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
 
-    - name: Get Latest Comment
-      id: get-comment
+    - name: Find Latest Comment
+      id: find-comment
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
@@ -38,12 +38,12 @@ runs:
           -H "Accept: application/vnd.github.v3+json" \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.find-pr.outputs.pr_number }}/comments")
 
-        # Extract the latest comment
-        LATEST_COMMENT=$(echo "$COMMENTS_JSON" | jq -r '.[-1].body')
-        echo "latest_comment=$LATEST_COMMENT" >> $GITHUB_OUTPUT
+        # Extract the latest comment's URL
+        COMMENT_URL=$(echo "$COMMENTS_JSON" | jq -r '.[-1].html_url')
+        echo "comment_url=$COMMENT_URL" >> $GITHUB_OUTPUT
 
     - name: Output PR URL and the Latest Comment
       shell: bash
       run: |
         echo "The associated PR URL is: ${{ steps.find-pr.outputs.pr_url }}"
-        echo "The comment is: ${{ steps.get-comment.outputs.latest_comment }}"
+        echo "The comment is: ${{ steps.find-comment.outputs.comment_url }}"
