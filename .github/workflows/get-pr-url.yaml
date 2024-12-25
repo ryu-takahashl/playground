@@ -26,18 +26,9 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/commits/$COMMIT_SHA/pulls")
 
-          # If no PR is found, fail the workflow
-          if [ "$(echo "$PR_JSON" | jq 'length')" -eq 0 ]; then
-            echo "No associated PR found for this commit."
-            exit 1
-          fi
-
           # Extract the PR URL from the response
           PR_URL=$(echo "$PR_JSON" | jq -r '.[0].html_url')
-
-          # Export the PR URL as an output
-          echo "Associated PR URL: $PR_URL"
-          echo "::set-output name=pr_url::$PR_URL"
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
 
       - name: Output PR URL
         run: |
